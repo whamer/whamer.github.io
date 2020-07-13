@@ -1,0 +1,228 @@
+---
+title: "IPS Digital"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r, echo=FALSE}
+htmltools::img(src = knitr::image_uri("./Plots/img/logos.png"), 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; right:0; padding:10px;')
+```
+
+# {.tabset .tabset-fade}
+
+## Alpha Version
+
+### Alpha Version
+#### Sie befinden sich im Prognose Bereich der neuen **IPS-Digital** Website [https://www.ips-weizen.uni-kiel.de/](https://www.ips-weizen.uni-kiel.de/). Diese wird derzeit noch weiterentwickelt. Da sie jedoch jetzt schon einen größeren Umfang bietet, als die vorherige Implementierung der Mehltau- und Braunrostprognose wurde beschlossen, den neuen Auftritt zu aktivieren.
+
+#### Möglicherweise treten noch Darstellungsfehler auf. Unter den Browsern Firefox und Edge läuft die Seite in der aktuellen Version stabil. Bei Verwendung des Internet-Explorers oder von Chrome kann es derzeit noch zu Darstellungsproblemen kommen. Sollten solche auftreten, kann ein Wechsel zur [vereinfachten Darstellung](https://whamer.github.io/IPS-Digital_plain.html) helfen.
+
+ 
+
+#### Möglicherweise treten noch Darstellungsfehler auf. Unter den Browsern Firefox und Edge läuft die Seite in der aktuellen Version stabil. Bei Verwendung des Internet-Explorers oder von Chrome kann es derzeit noch zu Darstellungsproblemen kommen.
+
+
+
+
+## Septoria Tritici
+
+Für Infektionen mit dem Erreger Septoria tritici wird die Dauer einer hohen Blattnässe als entscheidend erachtet. Die Graphiken im unteren Bereich dieser Seite stellen sowohl die Blattnässe als auch den Niederschlag für die Beprobungstandorte des IPS-Monitorings an. 
+
+*Anfällige Sorten:*
+
+Die **orangefarbenen Balken** zeigen dabei eine Blattnässe an, welche länger als 36 Stunden über 98 % lag. 
+
+*Weniger anfällige Sorten:*
+
+**Rote Bereiche** symbolisieren eine entsprechende Befeuchtung über mehr als 48 Stunden.
+
+
+### Karte
+    
+```{r}
+library(sf)
+locations <- read_sf("../Dont_Upload_Data/raw_data/spatial/standorte.gpkg") %>% 
+  dplyr::select(Standort)
+
+plz <- read_sf("../Dont_Upload_Data/raw_data/spatial/plz5sh-stellig.gpkg")
+Postleitzahlbezirke <- plz["plz"] 
+library(mapview)
+
+mapview(locations,col.regions="black",legend=FALSE)
+
+```
+
+### {.tabset .tabset-fade}
+
+#### Standortbezogene Wetterbeobachtungen (Woche)
+```{r}
+
+library(stringr)
+#devtools::install_github("walkerke/bsselectR")
+library(bsselectR)
+
+state_plots <- paste0(list.files("./Plots/septoria_tritici", pattern = "_w.png",full.names = TRUE))
+names(state_plots) <- str_replace_all(state_plots, 
+                                      c("\\_w.png" = "", 
+                                        "./Plots/septoria_tritici/" = ""))
+
+bsselect(state_plots, type = "img", selected = "Barlt", 
+         live_search = TRUE, show_tick = TRUE,
+         frame_height="85 %", dropup_auto=FALSE)
+```
+     
+#### Standortbezogene Wetterbeobachtungen (Jahr)
+```{r}
+
+library(stringr)
+#devtools::install_github("walkerke/bsselectR")
+library(bsselectR)
+
+state_plots <- paste0(list.files("./Plots/septoria_tritici", pattern = "_a.png",full.names = TRUE))
+names(state_plots) <- str_replace_all(state_plots, 
+                                      c("\\_a.png" = "", 
+                                        "./Plots/septoria_tritici/" = ""))
+
+bsselect(state_plots, type = "img", selected = "Barlt", 
+         live_search = TRUE, show_tick = TRUE,
+         frame_height="85 %", dropup_auto=FALSE)
+``` 
+
+      
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+## Echter Mehltau
+
+Auf dieser Seite werden die aktuellen Vorhersagen der Wahrscheinlicheit eines ertragsrelevanten Mehltauereignisses (Blumeria graminis f.sp. tritici) an Winterweizen angezeigt. Bei einer Wahrscheinlichkeit über 50 % wird entsprechend von einer Befallshäufigkeit (BHB) von mehr als 70 % ausgegangen. Die hier dargestellten Prognosen werden mit einem maschinellen Lernalgorithmus erzeugt, welcher den Einfluss des Wetters und klimatischer Gradienten auf das Befallsgeschehen der vergangenen 20 Jahre analysiert, und diesen auf die aktuelle Wetterlage überträgt.
+
+
+### Karte
+    
+```{r}
+plz <- read_sf("../Dont_Upload_Data/raw_data/spatial/plz5sh-stellig.gpkg")
+Postleitzahlbezirke <- plz["plz"] 
+
+library(mapview)
+mapview(Postleitzahlbezirke, alpha=0.5, col.regions = "grey40",legend=FALSE)
+```
+
+
+
+
+### {.tabset .tabset-fade}
+
+#### Unbehandelt
+
+```{r}
+
+library(stringr)
+#devtools::install_github("walkerke/bsselectR")
+library(bsselectR)
+
+state_plots <- paste0(list.files("./Plots/powdery_mildew", pattern = "PLZ_",full.names = TRUE))
+names(state_plots) <- str_replace_all(state_plots, 
+                                      c("\\.png" = "", 
+                                        "./Plots/powdery_mildew/" = ""))
+
+bsselect(state_plots, type = "img", selected = "PLZ_25870", 
+         live_search = TRUE, show_tick = TRUE,
+         frame_height="85 %", dropup_auto=FALSE)
+```
+      
+  
+#### Behandelt
+
+```{r}
+
+library(stringr)
+#devtools::install_github("walkerke/bsselectR")
+library(bsselectR)
+
+state_plots <- paste0(list.files("./Plots/powdery_mildew_ips", pattern = "PLZ_",full.names = TRUE))
+names(state_plots) <- str_replace_all(state_plots, 
+                                      c("\\.png" = "", 
+                                        "./Plots/powdery_mildew_ips/" = ""))
+
+bsselect(state_plots, type = "img", selected = "PLZ_25870", 
+         live_search = TRUE, show_tick = TRUE,
+         frame_height="85 %", dropup_auto=FALSE)
+```
+ 
+
+
+
+
+
+
+
+
+## Braunrost
+
+Auf dieser Seite werden die aktuellen Vorhersagen der Wahrscheinlicheit eines ertragsrelevanten Braunrostereignisses (Puccinia triticina) an Winterweizen angezeigt. Bei einer Wahrscheinlichkeit über 50 % wird entsprechend von einer Befallshäufigkeit (BHB) von mehr als 30 % ausgegangen. Die hier dargestellten Prognosen werden mit einem maschinellen Lernalgorithmus erzeugt, welcher den Einfluss des Wetters und klimatischer Gradienten auf das Befallsgeschehen der vergangenen 20 Jahre analysiert, und diesen auf die aktuelle Wetterlage überträgt.
+
+### Karte
+    
+```{r}
+plz <- read_sf("../Dont_Upload_Data/raw_data/spatial/plz5sh-stellig.gpkg")
+Postleitzahlbezirke <- plz["plz"] 
+
+library(mapview)
+mapview(Postleitzahlbezirke, alpha=0.5, col.regions = "grey40",legend=FALSE)
+```
+
+   
+### {.tabset .tabset-fade}
+
+#### Unbehandelt
+
+```{r}
+
+library(stringr)
+#devtools::install_github("walkerke/bsselectR")
+library(bsselectR)
+
+state_plots <- paste0(list.files("./Plots/brown_rust", pattern = "PLZ_", full.names = TRUE))
+names(state_plots) <- str_replace_all(state_plots, 
+                                      c("\\.png" = "", 
+                                        "./Plots/brown_rust/" = ""))
+
+bsselect(state_plots, type = "img", selected = "PLZ_25870", 
+         live_search = TRUE, show_tick = TRUE,
+         frame_height="85 %", dropup_auto=FALSE)
+```
+
+#### Behandelt
+
+```{r}
+
+library(stringr)
+#devtools::install_github("walkerke/bsselectR")
+library(bsselectR)
+
+state_plots <- paste0(list.files("./Plots/brown_rust_ips", pattern = "PLZ_", full.names = TRUE))
+names(state_plots) <- str_replace_all(state_plots, 
+                                      c("\\.png" = "", 
+                                        "./Plots/brown_rust_ips/" = ""))
+
+bsselect(state_plots, type = "img", selected = "PLZ_25870", 
+         live_search = TRUE, show_tick = TRUE,
+         frame_height="85 %", dropup_auto=FALSE)
+```
+
+

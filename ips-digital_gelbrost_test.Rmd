@@ -1,0 +1,77 @@
+---
+title: "IPS Digital Gelbrost"
+output: 
+  flexdashboard::flex_dashboard:
+    logo: ./Plots/img/logos.png
+    orientation: rows
+    navbar:
+      - { title: "Zur Hauptseite", href: "https://www.ips-weizen.uni-kiel.de/", align: right }
+---
+
+Alpha Version
+===================================== 
+
+### Alpha Version
+#### Sie befinden sich im Prognose Bereich der neuen **IPS-Digital** Website [https://www.ips-weizen.uni-kiel.de/](https://www.ips-weizen.uni-kiel.de/). Diese wird derzeit noch weiterentwickelt. Da sie jedoch jetzt schon einen größeren Umfang bietet, als die vorherige Implementierung der Mehltau- und Braunrostprognose wurde beschlossen, den neuen Auftritt zu aktivieren.
+
+#### Möglicherweise treten noch Darstellungsfehler auf. Unter dem Browser Edge läuft die Seite in der aktuellen Version stabil. Bei Verwendung des Internet-Explorers oder von Chrome kann es derzeit noch zu Darstellungsproblemen kommen. Sollten solche auftreten, kann ein Wechsel zur [vereinfachten Darstellung](https://whamer.github.io/IPS-Digital_plain.html) helfen.
+
+
+
+
+
+
+Gelbrost
+===================================== 
+
+Row 
+-------------------------------------
+    
+### Info {data-width=250}
+    
+Auf dieser Seite werden die aktuellen Vorhersagen der Wahrscheinlicheit eines ertragsrelevanten Gelbrostereignisses an Winterweizen angezeigt. Bei einer Wahrscheinlichkeit über 50 % wird entsprechend von einer Befallshäufigkeit (BHB) von mehr als 30 % ausgegangen. Die hier dargestellten Prognosen werden mit einem maschinellen Lernalgorithmus erzeugt, welcher den Einfluss des Wetters und klimatischer Gradienten auf das Befallsgeschehen der vergangenen 20 Jahre analysiert, und diesen auf die aktuelle Wetterlage überträgt.
+
+
+### Räumliche Vorhersage
+
+```{r}
+library(shinyLP)
+iframe(width = "660", height = "415",
+url_link = "./Plots/yellow_rust/yellow_rust_pred.mp4")
+```
+
+### Karte
+    
+```{r}
+library(sf)
+plz <- read_sf("../Dont_Upload_Data/raw_data/spatial/plz5sh-stellig.gpkg")
+Postleitzahlbezirke <- plz["plz"] 
+
+library(mapview)
+mapview(Postleitzahlbezirke, alpha=0.5, col.regions = "grey40",legend=FALSE)
+```
+
+
+
+   
+Row {.tabset .tabset-fade}
+-------------------------------------
+
+### Unbehandelt
+
+```{r}
+
+library(stringr)
+#devtools::install_github("walkerke/bsselectR")
+library(bsselectR)
+
+state_plots <- paste0(list.files("./Plots/yellow_rust", pattern = "PLZ_", full.names = TRUE))
+names(state_plots) <- str_replace_all(state_plots, 
+                                      c("\\.png" = "", 
+                                        "./Plots/yellow_rust/" = ""))
+
+bsselect(state_plots, type = "img", selected = "PLZ_25870", 
+         live_search = TRUE, show_tick = TRUE,
+         frame_height="85 %", dropup_auto=FALSE)
+
+```
