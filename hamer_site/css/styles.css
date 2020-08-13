@@ -1,0 +1,37 @@
+body {
+  padding-top: 56px;
+}
+
+/*.bg-primary {
+    background-color: #339933!important;
+}*/
+
+.frontlink{
+  color: #636363 !important; 
+  text-decoration: underline;
+}
+
+.frontlink:hover, .frontlink:active {
+  color: #C41A1A !important;
+  text-decoration: none;
+}
+
+.map-navigation{
+  color: #636363 !important; 
+  font-weight: bold;
+}
+
+.footerlinks{
+  color: #f1f1f1 !important; 
+  text-decoration: none;
+}
+
+.nolink{
+  color: #000000 !important; 
+  text-decoration: none;
+}
+
+.frontlink:hover, .frontlink:active {
+  color: #000000 !important; 
+  text-decoration: none;
+}
